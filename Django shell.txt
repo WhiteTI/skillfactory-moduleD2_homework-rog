@@ -1,0 +1,53 @@
+from news.models import *
+
+user1 = User.objects.create(username='John', first_name='Dou')
+Author.objects.create(authorUser=user1)
+
+user2 = User.objects.create(username='Egor', first_name='Rogozhnikov')
+Author.objects.create(authorUser=user2)
+
+Category.objects.create(name='IT')
+Category.objects.create(name='Education')
+Category.objects.create(name='Game')
+
+Post.objects.create(author=Author.objects.get(authorUser=User.objects.get(username='John')), categoryType='NW', title='kakoit title', text='kakoito text')
+Post.objects.create(author=Author.objects.get(authorUser=User.objects.get(username='John')), categoryType='AR', title='kakoit title hello', text='kakoito text goodbye')
+Post.objects.create(author=Author.objects.get(authorUser=User.objects.get(username='Egor')), categoryType='AR', title='kakoit title helloooo', text='kakoito text goodbyeeee')
+Post.objects.create(author=Author.objects.get(authorUser=User.objects.get(username='Egor')), categoryType='NW', title='kakoit title helloooo11', text='kakoito text goodbyeeee11')
+
+p1 = Post.objects.get(pk=1)
+p2 = Post.objects.get(pk=2) 
+p3 = Post.objects.get(pk=3) 
+p4 = Post.objects.get(pk=4) 
+
+catIT = Category.objects.get(name='IT')
+catEdu = Category.objects.get(name='Education')
+catGame = Category.objects.get(name='Game')
+
+p1.postCategory.add(catIT)
+p2.postCategory.add(catIT, catEdu)
+p3.postCategory.add(catGame)
+
+Comment.objects.create(commentUser=User.objects.get(username='John'), commentPost=Post.objects.get(pk=1), text='comment') 
+Comment.objects.create(commentUser=User.objects.get(username='John'), commentPost=Post.objects.get(pk=2), text='comment') 
+Comment.objects.create(commentUser=User.objects.get(username='Egor'), commentPost=Post.objects.get(pk=3), text='comment')
+
+Post.objects.get(pk=1).like()
+Post.objects.get(pk=1).like()
+Post.objects.get(pk=1).like()
+Post.objects.get(pk=2).like() 
+Post.objects.get(pk=2).like()
+Post.objects.get(pk=3).dislike() 
+Post.objects.get(pk=3).dislike()
+
+Comment.objects.get(pk=1).like() 
+Comment.objects.get(pk=2).dislike()
+
+Author.objects.get(authorUser=User.objects.get(username='John')).update_rating()
+Author.objects.get(authorUser=User.objects.get(username='Egor')).update_rating()
+
+Author.objects.get(authorUser=User.objects.get(username='Egor')).ratingAuthor
+Author.objects.get(authorUser=User.objects.get(username='John')).ratingAuthor
+
+Author.objects.all().order_by('-ratingAuthor').values('authorUser', 'ratingAuthor')[0]
+Post.objects.all().order_by('-rating').values('dateCreation', 'author', 'rating', 'title')[0]
